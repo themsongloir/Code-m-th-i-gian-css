@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đồng Hồ Đếm Thời Gian</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        .time-box {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .time-unit {
+            background-color: #007BFF;
+            color: white;
+            width: 250px;
+            height: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3em;
+            margin: 0 15px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .time-number {
+            background-color: #1E90FF;
+            color: white;
+            width: 150px;
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            border-radius: 10px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .time-label {
+            position: absolute;
+            bottom: 5px;
+            font-size: 0.5em;
+            color: white;
+        }
+
+        button {
+            font-size: 1.2em;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #startBtn, #resetBtn {
+            background-color: #40E0D0;
+            color: white;
+        }
+
+        #stopBtn {
+            background-color: #7f8c8d;
+            color: white;
+        }
+
+        button:hover { opacity: 0.9; }
+        button:disabled { background-color: #bdc3c7; cursor: not-allowed; }
+
+        .buttons { display: flex; justify-content: center; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="time-box">
+            <div id="minutes" class="time-unit">
+                <div id="minutesNumber" class="time-number">00</div>
+                <div class="time-label">MINUTES</div>
+            </div>
+            <div id="seconds" class="time-unit">
+                <div id="secondsNumber" class="time-number">00</div>
+                <div class="time-label">SECONDS</div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button id="startBtn" onclick="toggleTimer()">Start</button>
+            <button id="stopBtn" onclick="stopTimer()" disabled>Stop</button>
+            <button id="resetBtn" onclick="resetTimer()" disabled>Reset</button>
+        </div>
+    </div>
+
+    <script>
+        let timer, minutes = 0, seconds = 0, isRunning = false;
+
+        function toggleTimer() {
+            if (isRunning) {
+                clearInterval(timer);
+                document.getElementById('startBtn').textContent = 'Start';
+            } else {
+                timer = setInterval(updateTime, 1000);
+                document.getElementById('startBtn').textContent = 'Pause';
+            }
+            document.getElementById('stopBtn').disabled = false;
+            document.getElementById('resetBtn').disabled = false;
+            isRunning = !isRunning;
+        }
+
+        function stopTimer() {
+            clearInterval(timer);
+            document.getElementById('startBtn').textContent = 'Start';
+            isRunning = false;
+        }
+
+        function resetTimer() {
+            clearInterval(timer);
+            minutes = 0;
+            seconds = 0;
+            updateDisplay();
+            document.getElementById('startBtn').textContent = 'Start';
+            document.getElementById('stopBtn').disabled = true;
+            document.getElementById('resetBtn').disabled = true;
+            isRunning = false;
+        }
+
+        function updateTime() {
+            seconds++;
+            if (seconds === 60) {
+                seconds = 0;
+                minutes++;
+            }
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById('minutesNumber').textContent = formatTime(minutes);
+            document.getElementById('secondsNumber').textContent = formatTime(seconds);
+        }
+
+        function formatTime(time) {
+            return time < 10 ? '0' + time : time;
+        }
+    </script>
+
+</body>
+</html>
